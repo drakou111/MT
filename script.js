@@ -165,6 +165,7 @@ function addRow() {
     const lang = translations[currentLanguage];
     const table = document.getElementById("conversionTable").getElementsByTagName("tbody")[0];
     const newRow = table.insertRow();
+    const rowIndex = newRow.rowIndex;
 
     // Add cells with appropriate input elements
     const ingredientCell = newRow.insertCell(0);
@@ -181,7 +182,9 @@ function addRow() {
     currentAmountCell.innerHTML = `<input type="number" name="currentAmount" placeholder="${lang.amountPlaceholder}">`;
 
     // Current measurement select box
-    currentMeasurementCell.innerHTML = `<select name="currentMeasurement">${lang.measurementOptions}</select>`;
+    currentMeasurementCell.innerHTML = `<select name="currentMeasurement" onchange="syncDesiredMeasurement(this)">
+        ${lang.measurementOptions}
+    </select>`;
 
     // Desired amount input field
     desiredAmountCell.innerHTML = `<input type="number" name="desiredAmount" placeholder="${lang.desiredAmountPlaceholder}">`;
@@ -193,6 +196,16 @@ function addRow() {
     lockCell.innerHTML = '<input type="radio" name="lock">';
 
     updateRadioButtons();
+}
+
+// Function to synchronize the desired measurement with the current measurement
+function syncDesiredMeasurement(selectElement) {
+    const row = selectElement.closest('tr'); // Find the closest row
+    const desiredMeasurementSelect = row.querySelector('select[name="desiredMeasurement"]'); // Find the corresponding desired measurement select
+
+    if (desiredMeasurementSelect) {
+        desiredMeasurementSelect.value = selectElement.value; // Set the desired measurement to the same value as the current measurement
+    }
 }
 
 // Function to remove the last row from the table

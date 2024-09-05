@@ -62,31 +62,6 @@ button {
     font-size: 16px;
 }
 
-button:hover {
-    background-color: #45a049;
-}
-
-button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-}
-
-/* Radio Buttons */
-input[type="radio"] {
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    vertical-align: middle;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    table {
-        font-size: 14px;
-    }
-
-    button {
-        width: 100%;
-        margin: 5px 0;
-    }
+#buttons {
+    text-align: center;
 }
