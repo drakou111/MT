@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="pageTitle">Measurement Converter</title>
+    <link rel="icon" href="https://static-00.iconduck.com/assets.00/math-icon-1992x2048-g27eko0f.png" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div style="width: 20%; margin: 1%">
+        <select id="languageSelector" onchange="switchLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+    
+    <table id="conversionTable" border="1">
+        <thead>
+            <tr>
+                <th data-translate="ingredientHeader">Ingredient</th>
+                <th data-translate="currentAmountHeader">Current Amount</th>
+                <th data-translate="currentMeasurementHeader">Current Measurement</th>
+                <th data-translate="desiredAmountHeader">Desired Amount</th>
+                <th data-translate="desiredMeasurementHeader">Desired Measurement</th>
+                <th data-translate="lockHeader">Lock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <button data-translate="addRowButton" onclick="addRow()">Add Row</button>
+    <button data-translate="removeRowButton" onclick="removeRow()">Remove Row</button>
+    <button data-translate="calculateButton" onclick="calculate()">Calculate</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
