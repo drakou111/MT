@@ -215,7 +215,7 @@ async function getRecipeJsonFromChatGPT() {
     }
 
     try {
-        const response = await fetch(`/.netlify/functions/chatgpt?recipe=${encodeURIComponent(recipe)}`, {
+        const response = await fetch(`/.netlify/functions/get-data?recipe=${encodeURIComponent(recipe)}`, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },

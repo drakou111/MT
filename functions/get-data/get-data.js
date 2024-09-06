@@ -12,7 +12,6 @@ exports.handler = async function(event, context) {
     }
 
     const apiKey = process.env.CHAT_GPT_API_KEY;
-    console.log("API KEY: " + apiKey);
 
     try {
         const response = await fetch('https://api.openai.com/v1/completions', {
