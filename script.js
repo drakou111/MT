@@ -150,8 +150,10 @@ function updateTableFromJSON(json) {
         table.deleteRow(0);
     }
 
+    let formattedJson = JSON.parse(json);
+
     // Iterate through the JSON ingredients and add new rows
-    for (const [key, { ingredient, amount, measurement }] of Object.entries(json.ingredients)) {
+    for (const [key, { ingredient, amount, measurement }] of Object.entries(formattedJson.ingredients)) {
         const newRow = table.insertRow();
         
         // Add cells with appropriate input elements
