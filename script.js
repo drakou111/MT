@@ -39,7 +39,8 @@ const translations = {
         `,
         noRowSelected: "No row was selected.",
         mismatchError: "Cannot convert from",
-        minimumRowsError: "At least one row is required."
+        minimumRowsError: "At least one row is required.",
+        convertRecipe: "Convert Recipe",
     },
     fr: {
         pageTitle: "Convertisseur de mesures",
@@ -81,7 +82,8 @@ const translations = {
         `,
         noRowSelected: "Aucune ligne n'a été sélectionnée.",
         mismatchError: "Impossible de convertir de",
-        minimumRowsError: "Au moins une ligne est requise."
+        minimumRowsError: "Au moins une ligne est requise.",
+        convertRecipe: "Convertir la recette",
     }
 };
 
@@ -136,6 +138,105 @@ function switchLanguage(lang) {
     if (lang === 'en' || lang === 'fr') {
         currentLanguage = lang;
         applyTranslations();
+    }
+}
+
+function updateTableFromJSON(json) {
+    const lang = translations[currentLanguage];
+    const table = document.getElementById("conversionTable").getElementsByTagName("tbody")[0];
+    
+    // Clear existing table rows (except header)
+    while (table.rows.length > 0) {
+        table.deleteRow(0);
+    }
+
+    // Iterate through the JSON ingredients and add new rows
+    for (const [key, { ingredient, amount, measurement }] of Object.entries(json.ingredients)) {
+        const newRow = table.insertRow();
+        
+        // Add cells with appropriate input elements
+        const ingredientCell = newRow.insertCell(0);
+        const currentAmountCell = newRow.insertCell(1);
+        const currentMeasurementCell = newRow.insertCell(2);
+        const desiredAmountCell = newRow.insertCell(3);
+        const desiredMeasurementCell = newRow.insertCell(4);
+        const lockCell = newRow.insertCell(5);
+
+        // Ingredient input field
+        ingredientCell.innerHTML = `<input type="text" name="ingredient" value="${ingredient}" readonly>`;
+
+        // Current amount input field
+        currentAmountCell.innerHTML = `<input type="number" name="currentAmount" value="${amount}">`;
+
+        // Current measurement select box
+        currentMeasurementCell.innerHTML = `<select name="currentMeasurement" onchange="syncDesiredMeasurement(this)">
+            ${generateMeasurementOptions(measurement)}
+        </select>`;
+
+        // Desired amount input field
+        desiredAmountCell.innerHTML = `<input type="number" name="desiredAmount" placeholder="${lang.desiredAmountPlaceholder}">`;
+
+        // Desired measurement select box
+        desiredMeasurementCell.innerHTML = `<select name="desiredMeasurement">${generateMeasurementOptions(measurement)}</select>`;
+
+        // Lock (radio button) for desired amount
+        lockCell.innerHTML = '<input type="radio" name="lock">';
+    }
+}
+
+// Function to generate measurement options
+function generateMeasurementOptions(selectedValue) {
+    const measurements = {
+        'ml': 'Milliliter (ml)', 'g': 'Gram (g)', 'u': 'Unit (u)', 
+        'oz': 'Ounce (oz)', 'lb': 'Pound (lb)', 'kg': 'Kilogram (kg)', 
+        't': 'Tonne (t)', 'tsp': 'Teaspoon (tsp)', 'tbsp': 'Tablespoon (tbsp)', 
+        'fl oz': 'Fluid Ounce (fl oz)', 'cup': 'Cup (cup)', 'pint': 'Pint (pint)', 
+        'qt': 'Quart (qt)', 'l': 'Liter (l)', 'gal': 'Gallon (gal)'
+    };
+    return Object.entries(measurements).map(([value, label]) => 
+        `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${label}</option>`
+    ).join('');
+}
+
+async function convertRecipe() {
+    // Replace with your actual function for getting JSON from the ChatGPT API
+    const json = await getRecipeJsonFromChatGPT();
+    
+    // Update the table with the JSON data
+    updateTableFromJSON(json);
+}
+
+async function getRecipeJsonFromChatGPT() {
+    const recipe = document.getElementById('recipeInput').value;
+
+    if (!recipe.trim()) {
+        alert('Please enter a recipe.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/.netlify/functions/chatgpt?recipe=${encodeURIComponent(recipe)}`, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const jsonOutput = data.choices[0].message.content.trim();
+        const parsedJson = JSON.parse(jsonOutput);
+
+        // Handle the parsed JSON here (e.g., update the table)
+        console.log(parsedJson);
+
+        // Optionally, you can update the UI with the parsed JSON data
+        updateTableWithJson(parsedJson);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your recipe.');
     }
 }
 

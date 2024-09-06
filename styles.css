@@ -34,6 +34,21 @@ th, td {
     text-align: left;
 }
 
+#chatgptSection {
+    margin-top: 20px;
+}
+
+#recipeInput {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#jsonOutput {
+    margin-top: 10px;
+    white-space: pre-wrap; /* Preserve formatting */
+}
+
 th {
     background-color: #f2f2f2;
     text-align: center;
