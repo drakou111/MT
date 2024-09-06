@@ -12,7 +12,7 @@ exports.handler = async function(event, context) {
     const apiKey = process.env.CHAT_GPT_API_KEY;
 
     try {
-        const response = await fetch('https://api.openai.com/v1/completions', {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,8 +35,9 @@ exports.handler = async function(event, context) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+          const errorDetails = await response.text();
+          throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorDetails}`);
+      }
 
         const data = await response.json();
         const jsonOutput = data.choices[0].message.content.trim();
