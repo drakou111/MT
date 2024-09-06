@@ -1,6 +1,4 @@
-// netlify/functions/chatgpt.js
-import fetch from 'node-fetch';
-
+// netlify/functions/get-data.js
 exports.handler = async function(event, context) {
     const { recipe } = event.queryStringParameters;
 
@@ -44,7 +42,7 @@ exports.handler = async function(event, context) {
         const jsonOutput = data.choices[0].message.content.trim();
         return {
             statusCode: 200,
-            body: JSON.stringify(data),
+            body: JSON.stringify({ jsonOutput }),
         };
     } catch (error) {
         console.error('Error:', error);
