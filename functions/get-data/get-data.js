@@ -43,7 +43,7 @@ exports.handler = async function(event, context) {
         const jsonOutput = data.choices[0].message.content.trim();
         return {
             statusCode: 200,
-            body: JSON.stringify({ jsonOutput }),
+            body: JSON.stringify(jsonOutput),
         };
     } catch (error) {
         console.error('Error:', error);

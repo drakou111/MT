@@ -144,16 +144,14 @@ function switchLanguage(lang) {
 function updateTableFromJSON(json) {
     const lang = translations[currentLanguage];
     const table = document.getElementById("conversionTable").getElementsByTagName("tbody")[0];
-    
+
     // Clear existing table rows (except header)
     while (table.rows.length > 0) {
         table.deleteRow(0);
     }
 
-    let formattedJson = JSON.parse(json);
-
     // Iterate through the JSON ingredients and add new rows
-    for (const [key, { ingredient, amount, measurement }] of Object.entries(formattedJson.ingredients)) {
+    for (const [key, { ingredient, amount, measurement }] of Object.entries(json.ingredients)) {
         const newRow = table.insertRow();
         
         // Add cells with appropriate input elements
@@ -201,11 +199,7 @@ function generateMeasurementOptions(selectedValue) {
 }
 
 async function convertRecipe() {
-    // Replace with your actual function for getting JSON from the ChatGPT API
-    const json = await getRecipeJsonFromChatGPT();
-    
-    // Update the table with the JSON data
-    updateTableFromJSON(json);
+    await getRecipeJsonFromChatGPT();
 }
 
 async function getRecipeJsonFromChatGPT() {
@@ -228,14 +222,10 @@ async function getRecipeJsonFromChatGPT() {
         }
 
         const data = await response.json();
-        const jsonOutput = data.choices[0].message.content.trim();
-        const parsedJson = JSON.parse(jsonOutput);
 
-        // Handle the parsed JSON here (e.g., update the table)
-        console.log(parsedJson);
+        const parsedJson = JSON.parse(data);
 
-        // Optionally, you can update the UI with the parsed JSON data
-        updateTableWithJson(parsedJson);
+        updateTableFromJSON(parsedJson);
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while processing your recipe.');
