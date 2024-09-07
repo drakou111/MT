@@ -13,6 +13,30 @@ const translations = {
         ingredientPlaceholder: "Ingredient Name",
         amountPlaceholder: "Amount",
         desiredAmountPlaceholder: "Desired Amount",
+        measurementStringOptions: {
+            mass: {
+                'mg': 'Milligram (mg)',
+                'g': 'Gram (g)',
+                'oz': 'Ounce (oz)',
+                'lb': 'Pound (lb)',
+                'kg': 'Kilogram (kg)',
+                't': 'Tonne (t)'
+            },
+            volume: {
+                'ml': 'Milliliter (ml)',
+                'tsp': 'Teaspoon (tsp)',
+                'tbsp': 'Tablespoon (tbsp)',
+                'fl oz': 'Fluid Ounce (fl oz)',
+                'cup': 'Cup (cup)',
+                'pint': 'Pint (pint)',
+                'qt': 'Quart (qt)',
+                'l': 'Liter (l)',
+                'gal': 'Gallon (gal)'
+            },
+            other: {
+                'u': 'Unit (u)'
+            }
+        },
         measurementOptions: `
             <optgroup label="Mass">
                 <option value="mg">Milligram (mg)</option>
@@ -56,6 +80,30 @@ const translations = {
         ingredientPlaceholder: "Nom de l'ingrédient",
         amountPlaceholder: "Quantité",
         desiredAmountPlaceholder: "Quantité souhaitée",
+        measurementStringOptions: {
+            mass: {
+                'mg': 'Milligramme (mg)',
+                'g': 'Gramme (g)',
+                'oz': 'Once (oz)',
+                'lb': 'Livre (lb)',
+                'kg': 'Kilogramme (kg)',
+                't': 'Tonne (t)'
+            },
+            volume: {
+                'ml': 'Millilitre (ml)',
+                'tsp': 'Cuillère à café (tsp)',
+                'tbsp': 'Cuillère à soupe (tbsp)',
+                'fl oz': 'Once fluide (fl oz)',
+                'cup': 'Tasse (cup)',
+                'pint': 'Pinte (pint)',
+                'qt': 'Quart (qt)',
+                'l': 'Litre (l)',
+                'gal': 'Gallon (gal)'
+            },
+            other: {
+                'u': 'Unité (u)'
+            }
+        },
         measurementOptions: `
             <optgroup label="Masse">
                 <option value="mg">Milligramme (mg)</option>
@@ -172,18 +220,35 @@ function updateTableFromJSON(json) {
 
         // Current measurement select box
         currentMeasurementCell.innerHTML = `<select name="currentMeasurement" onchange="syncDesiredMeasurement(this)">
-            ${lang.measurementOptions}
+            ${generateMeasurementOptions(measurement)}
         </select>`;
 
         // Desired amount input field
         desiredAmountCell.innerHTML = `<input type="number" name="desiredAmount" placeholder="${lang.desiredAmountPlaceholder}">`;
 
         // Desired measurement select box
-        desiredMeasurementCell.innerHTML = `<select name="desiredMeasurement">${lang.measurementOptions}</select>`;
+        desiredMeasurementCell.innerHTML = `<select name="desiredMeasurement">${generateMeasurementOptions(measurement)}</select>`;
 
         // Lock (radio button) for desired amount
         lockCell.innerHTML = '<input type="radio" name="lock">';
     }
+}
+
+// Function to generate measurement options
+function generateMeasurementOptions(selectedValue) {
+    const lang = translations[currentLanguage];
+    
+    // Combine all measurement options into a single object
+    const allMeasurements = {
+        ...lang.measurementStringOptions.mass,
+        ...lang.measurementStringOptions.volume,
+        ...lang.measurementStringOptions.other
+    };
+    
+    // Generate HTML for the measurement options
+    return Object.entries(allMeasurements).map(([value, label]) => 
+        `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${label}</option>`
+    ).join('');
 }
 
 async function convertRecipe() {
