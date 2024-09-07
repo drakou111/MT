@@ -120,7 +120,9 @@ function applyTranslations() {
     // Update the measurement select box in all rows
     const selects = document.querySelectorAll('#conversionTable select');
     selects.forEach(select => {
+        const selectedValue = select.value;
         select.innerHTML = lang.measurementOptions;
+        select.value = selectedValue;
     });
 
     // Update placeholders in all rows
@@ -170,32 +172,18 @@ function updateTableFromJSON(json) {
 
         // Current measurement select box
         currentMeasurementCell.innerHTML = `<select name="currentMeasurement" onchange="syncDesiredMeasurement(this)">
-            ${generateMeasurementOptions(measurement)}
+            ${lang.measurementOptions}
         </select>`;
 
         // Desired amount input field
         desiredAmountCell.innerHTML = `<input type="number" name="desiredAmount" placeholder="${lang.desiredAmountPlaceholder}">`;
 
         // Desired measurement select box
-        desiredMeasurementCell.innerHTML = `<select name="desiredMeasurement">${generateMeasurementOptions(measurement)}</select>`;
+        desiredMeasurementCell.innerHTML = `<select name="desiredMeasurement">${lang.measurementOptions}</select>`;
 
         // Lock (radio button) for desired amount
         lockCell.innerHTML = '<input type="radio" name="lock">';
     }
-}
-
-// Function to generate measurement options
-function generateMeasurementOptions(selectedValue) {
-    const measurements = {
-        'ml': 'Milliliter (ml)', 'g': 'Gram (g)', 'u': 'Unit (u)', 
-        'oz': 'Ounce (oz)', 'lb': 'Pound (lb)', 'kg': 'Kilogram (kg)', 
-        't': 'Tonne (t)', 'tsp': 'Teaspoon (tsp)', 'tbsp': 'Tablespoon (tbsp)', 
-        'fl oz': 'Fluid Ounce (fl oz)', 'cup': 'Cup (cup)', 'pint': 'Pint (pint)', 
-        'qt': 'Quart (qt)', 'l': 'Liter (l)', 'gal': 'Gallon (gal)'
-    };
-    return Object.entries(measurements).map(([value, label]) => 
-        `<option value="${value}" ${value === selectedValue ? 'selected' : ''}>${label}</option>`
-    ).join('');
 }
 
 async function convertRecipe() {
